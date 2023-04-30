@@ -44,6 +44,16 @@ da.dropna(how='any' , inplace=True)
 da.drop_duplicates(inplace=True)
 da.drop(['lat' , 'lng'] , axis= 1)
 
+# split day from text in "days_since_review" column
+def get_day(data) :
+    match = re.match(r"([0-9]+)", data , re.I)
+    if match:
+        number = int(match.group())
+        return number
+da["days_since_reviews"] = da["days_since_review"].apply(get_day)
+print(da["days_since_reviews"])
+print("==================================================================")
+
 X = da.iloc[: , :-1]
 Y = da['Reviewer_Score']
 print("x.shape is : {}".format(X.shape))
