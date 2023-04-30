@@ -17,15 +17,19 @@ warnings.filterwarnings("ignore")
 
 da = pd.read_csv("hotel-regression-dataset.csv")
 print(da.head())
+print("==================================================================")
 
 # 1- preprocessing
+# convert(split) date to m,d,y
 da['Review_Date'] = pd.to_datetime(da['Review_Date'])
 da['Review_Date'] = np.array(da['Review_Date'].dt.strftime("%m%d%Y"))
 
 print(da.describe())
+print("==================================================================")
 
-#sns.scatterplot(data= da , x= da['Hotel_Address'] , y= da['Additional_Number_of_Scoring'] , hue=da['Hotel_Name'])
-#plt.show()
+da_num = da.select_dtypes(include = ['float64', 'int64'])
+da_num.hist(figsize=(12, 18), bins=50, xlabelsize=9, ylabelsize=9)
+plt.show()
 
 # Handle outliers
 q1 = da['Average_Score'].quantile(0.25)
@@ -44,7 +48,9 @@ X = da.iloc[: , :-1]
 Y = da['Reviewer_Score']
 print("x.shape is : {}".format(X.shape))
 print("y.shape is : {}".format(Y.shape))
+print("==================================================================")
 
+# feature encoding for categorical data
 def Feature_Encoder(X , cols):
     for c in cols:
         lbl = LabelEncoder()
@@ -66,7 +72,9 @@ top_feature = top_feature.delete(-1)
 X = X[top_feature]
 
 print(da['Hotel_Name'].value_counts())
+print("==================================================================")
 print(da['Reviewer_Nationality'].value_counts())
+print("==================================================================")
 
 '''from pycountry_convert import country_alpha2_to_continent_code, country_name_to_country_alpha2
 def get_continent(col):
@@ -83,7 +91,7 @@ def get_continent(col):
 da['Reviewer_continent'] = da['Reviewer_Nationality'].apply(get_continent)
 print(da['Reviewer_continent'])'''
 
-print("index of the max review score" , da['Reviewer_Score'].idxmax().sum())
+#print("index of the max review score" , da['Reviewer_Score'].idxmax().sum())
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size = 0.2 , train_size = 0.8 , shuffle = True , random_state=42)
 
 # feature selection
